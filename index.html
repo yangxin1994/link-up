@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B端后台管理系统 · UI设计系统展示</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===================== 基础重置 ===================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --portal-bg: #0a0d1a;
+  --portal-surface: #121627;
+  --portal-border: rgba(255,255,255,0.08);
+  --portal-text: #e8eaf0;
+  --portal-text-dim: #8b8fa3;
+  --portal-accent: #6366f1;
+  --portal-accent-glow: rgba(99,102,241,0.35);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Manrope', 'Noto Sans SC', sans-serif;
+  background: var(--portal-bg);
+  color: var(--portal-text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+
+/* ===================== 背景氛围 ===================== */
+.portal-bg {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+}
+.portal-bg::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 20% 0%, rgba(99,102,241,0.12), transparent 60%),
+    radial-gradient(ellipse 600px 500px at 80% 100%, rgba(6,182,212,0.08), transparent 60%),
+    radial-gradient(ellipse 500px 400px at 50% 50%, rgba(139,92,246,0.06), transparent 60%);
+}
+.portal-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ===================== 导航栏 ===================== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 48px;
+  background: rgba(10,13,26,0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--portal-border);
+}
+.nav-brand { display: flex; align-items: center; gap: 12px; }
+.nav-brand-mark {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 18px; color: white;
+  box-shadow: 0 0 24px var(--portal-accent-glow);
+}
+.nav-brand-text { font-weight: 700; font-size: 16px; letter-spacing: -0.3px; }
+.nav-brand-text span { color: var(--portal-text-dim); font-weight: 400; font-size: 13px; margin-left: 8px; }
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+  font-size: 14px; color: var(--portal-text-dim); font-weight: 500;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--portal-text); }
+.nav-cta {
+  padding: 8px 20px; border-radius: 8px;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white; font-size: 13px; font-weight: 600;
+  transition: transform .2s, box-shadow .2s;
+}
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 24px var(--portal-accent-glow); }
+
+/* ===================== Hero 区域 ===================== */
+.hero {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 120px 48px 80px; text-align: center;
+  position: relative;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border-radius: 100px;
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.25);
+  font-size: 13px; color: #a5b4fc; font-weight: 500;
+  margin-bottom: 32px;
+  animation: fadeUp .8s ease;
+}
+.hero-badge .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #6366f1;
+  box-shadow: 0 0 8px #6366f1;
+  animation: pulse 2s infinite;
+}
+.hero h1 {
+  font-size: clamp(36px, 5vw, 64px); font-weight: 800;
+  line-height: 1.1; letter-spacing: -2px;
+  margin-bottom: 24px;
+  animation: fadeUp .8s ease .1s both;
+}
+.hero h1 .gradient {
+  background: linear-gradient(135deg, #818cf8 0%, #22d3ee 50%, #818cf8 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+.hero p {
+  font-size: 18px; color: var(--portal-text-dim);
+  max-width: 640px; margin-bottom: 48px;
+  animation: fadeUp .8s ease .2s both;
+}
+.hero-stats {
+  display: flex; gap: 48px; margin-bottom: 56px;
+  animation: fadeUp .8s ease .3s both;
+}
+.hero-stat { text-align: center; }
+.hero-stat-num {
+  font-size: 32px; font-weight: 800; letter-spacing: -1px;
+  background: linear-gradient(135deg, #818cf8, #22d3ee);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-stat-label { font-size: 13px; color: var(--portal-text-dim); margin-top: 4px; }
+
+/* ===================== 主题卡片 ===================== */
+.themes-section {
+  padding: 80px 48px; max-width: 1400px; margin: 0 auto;
+}
+.section-header { text-align: center; margin-bottom: 64px; }
+.section-header h2 {
+  font-size: 36px; font-weight: 700; letter-spacing: -1px;
+  margin-bottom: 12px;
+}
+.section-header p { color: var(--portal-text-dim); font-size: 16px; }
+
+.themes-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+}
+.theme-card {
+  border-radius: 20px; overflow: hidden;
+  border: 1px solid var(--portal-border);
+  background: var(--portal-surface);
+  transition: transform .3s, box-shadow .3s, border-color .3s;
+  cursor: pointer; position: relative;
+}
+.theme-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+  border-color: rgba(255,255,255,0.15);
+}
+
+/* --- 主题预览：浅蓝 --- */
+.theme-preview {
+  height: 280px; position: relative; overflow: hidden;
+  padding: 20px;
+}
+.theme-preview-light-blue {
+  background: linear-gradient(135deg, #e8f1ff 0%, #f0f7ff 100%);
+}
+.theme-preview-light-blue .mock-sidebar {
+  position: absolute; left: 20px; top: 20px; bottom: 20px; width: 60px;
+  background: white; border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(59,130,246,0.1);
+  display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 10px;
+}
+.theme-preview-light-blue .mock-sidebar .mock-logo {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  margin-bottom: 8px;
+}
+.theme-preview-light-blue .mock-sidebar .mock-nav-item {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: #eff6ff;
+}
+.theme-preview-light-blue .mock-sidebar .mock-nav-item.active {
+  background: #3b82f6;
+}
+.theme-preview-light-blue .mock-content {
+  position: absolute; left: 96px; right: 20px; top: 20px; bottom: 20px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.theme-preview-light-blue .mock-topbar {
+  height: 36px; background: white; border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+  display: flex; align-items: center; padding: 0 12px; gap: 8px;
+}
+.theme-preview-light-blue .mock-topbar .mock-search {
+  height: 18px; width: 80px; background: #f0f7ff; border-radius: 4px;
+}
+.theme-preview-light-blue .mock-topbar .mock-avatar {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  margin-left: auto;
+}
+.theme-preview-light-blue .mock-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; flex: 1;
+}
+.theme-preview-light-blue .mock-card {
+  background: white; border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.06);
+  padding: 8px;
+}
+.theme-preview-light-blue .mock-card .mock-num {
+  height: 6px; width: 60%; background: #3b82f6; border-radius: 3px; margin-bottom: 6px;
+}
+.theme-preview-light-blue .mock-card .mock-bar {
+  height: 4px; background: #e0edff; border-radius: 2px;
+}
+.theme-preview-light-blue .mock-chart {
+  flex: 1; background: white; border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.06);
+  display: flex; align-items: flex-end; padding: 8px; gap: 4px;
+}
+.theme-preview-light-blue .mock-chart .mock-bar-chart {
+  flex: 1; background: linear-gradient(to top, #3b82f6, #93c5fd);
+  border-radius: 2px 2px 0 0; opacity: 0.7;
+}
+
+/* --- 主题预览：白底 --- */
+.theme-preview-white {
+  background: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+}
+.theme-preview-white .mock-sidebar {
+  position: absolute; left: 20px; top: 20px; bottom: 20px; width: 60px;
+  background: #fafafa; border-radius: 10px;
+  border: 1px solid #f0f0f0;
+  display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 10px;
+}
+.theme-preview-white .mock-sidebar .mock-logo {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  margin-bottom: 8px;
+}
+.theme-preview-white .mock-sidebar .mock-nav-item {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: #f5f5f5;
+}
+.theme-preview-white .mock-sidebar .mock-nav-item.active {
+  background: #4f46e5;
+}
+.theme-preview-white .mock-content {
+  position: absolute; left: 96px; right: 20px; top: 20px; bottom: 20px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.theme-preview-white .mock-topbar {
+  height: 36px; background: white; border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  display: flex; align-items: center; padding: 0 12px; gap: 8px;
+}
+.theme-preview-white .mock-topbar .mock-search {
+  height: 18px; width: 80px; background: #f5f5f5; border-radius: 4px;
+}
+.theme-preview-white .mock-topbar .mock-avatar {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  margin-left: auto;
+}
+.theme-preview-white .mock-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; flex: 1;
+}
+.theme-preview-white .mock-card {
+  background: white; border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  padding: 8px;
+}
+.theme-preview-white .mock-card .mock-num {
+  height: 6px; width: 60%; background: #4f46e5; border-radius: 3px; margin-bottom: 6px;
+}
+.theme-preview-white .mock-card .mock-bar {
+  height: 4px; background: #f0f0f0; border-radius: 2px;
+}
+.theme-preview-white .mock-chart {
+  flex: 1; background: white; border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  display: flex; align-items: flex-end; padding: 8px; gap: 4px;
+}
+.theme-preview-white .mock-chart .mock-bar-chart {
+  flex: 1; background: linear-gradient(to top, #4f46e5, #c4b5fd);
+  border-radius: 2px 2px 0 0; opacity: 0.7;
+}
+
+/* --- 主题预览：科幻蓝 --- */
+.theme-preview-scifi {
+  background: linear-gradient(135deg, #0a0e27 0%, #0d1b3e 100%);
+}
+.theme-preview-scifi::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.theme-preview-scifi .mock-sidebar {
+  position: absolute; left: 20px; top: 20px; bottom: 20px; width: 60px; z-index: 1;
+  background: rgba(13,27,62,0.8); border-radius: 10px;
+  border: 1px solid rgba(0,212,255,0.2);
+  backdrop-filter: blur(10px);
+  display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 10px;
+  box-shadow: 0 0 20px rgba(0,212,255,0.1);
+}
+.theme-preview-scifi .mock-sidebar .mock-logo {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, #00d4ff, #0066ff);
+  box-shadow: 0 0 12px rgba(0,212,255,0.5);
+  margin-bottom: 8px;
+}
+.theme-preview-scifi .mock-sidebar .mock-nav-item {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(0,212,255,0.05);
+  border: 1px solid rgba(0,212,255,0.1);
+}
+.theme-preview-scifi .mock-sidebar .mock-nav-item.active {
+  background: rgba(0,212,255,0.2);
+  border-color: rgba(0,212,255,0.5);
+  box-shadow: 0 0 10px rgba(0,212,255,0.3);
+}
+.theme-preview-scifi .mock-content {
+  position: absolute; left: 96px; right: 20px; top: 20px; bottom: 20px; z-index: 1;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.theme-preview-scifi .mock-topbar {
+  height: 36px; background: rgba(13,27,62,0.6); border-radius: 8px;
+  border: 1px solid rgba(0,212,255,0.15);
+  backdrop-filter: blur(10px);
+  display: flex; align-items: center; padding: 0 12px; gap: 8px;
+}
+.theme-preview-scifi .mock-topbar .mock-search {
+  height: 18px; width: 80px; background: rgba(0,212,255,0.08); border-radius: 4px;
+  border: 1px solid rgba(0,212,255,0.1);
+}
+.theme-preview-scifi .mock-topbar .mock-avatar {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: linear-gradient(135deg, #00d4ff, #0066ff);
+  box-shadow: 0 0 8px rgba(0,212,255,0.5);
+  margin-left: auto;
+}
+.theme-preview-scifi .mock-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; flex: 1;
+}
+.theme-preview-scifi .mock-card {
+  background: rgba(13,27,62,0.5); border-radius: 8px;
+  border: 1px solid rgba(0,212,255,0.12);
+  backdrop-filter: blur(8px);
+  padding: 8px;
+}
+.theme-preview-scifi .mock-card .mock-num {
+  height: 6px; width: 60%; background: #00d4ff; border-radius: 3px; margin-bottom: 6px;
+  box-shadow: 0 0 6px rgba(0,212,255,0.4);
+}
+.theme-preview-scifi .mock-card .mock-bar {
+  height: 4px; background: rgba(0,212,255,0.1); border-radius: 2px;
+}
+.theme-preview-scifi .mock-chart {
+  flex: 1; background: rgba(13,27,62,0.5); border-radius: 8px;
+  border: 1px solid rgba(0,212,255,0.12);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: flex-end; padding: 8px; gap: 4px;
+}
+.theme-preview-scifi .mock-chart .mock-bar-chart {
+  flex: 1; background: linear-gradient(to top, #00d4ff, rgba(0,212,255,0.3));
+  border-radius: 2px 2px 0 0;
+  box-shadow: 0 0 6px rgba(0,212,255,0.3);
+}
+
+/* --- 主题卡片底部信息 --- */
+.theme-card-info {
+  padding: 24px;
+}
+.theme-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.theme-card-title {
+  font-size: 18px; font-weight: 700; letter-spacing: -0.3px;
+}
+.theme-card-tag {
+  font-size: 11px; padding: 3px 10px; border-radius: 100px;
+  font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase;
+}
+.theme-card-tag.light-blue { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.theme-card-tag.white { background: rgba(79,70,229,0.15); color: #a5b4fc; }
+.theme-card-tag.scifi { background: rgba(0,212,255,0.15); color: #22d3ee; }
+
+.theme-card-desc {
+  font-size: 13px; color: var(--portal-text-dim); margin-bottom: 16px;
+  line-height: 1.5;
+}
+.theme-card-palette {
+  display: flex; gap: 6px; margin-bottom: 20px;
+}
+.theme-card-palette .swatch {
+  width: 24px; height: 24px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.theme-card-actions {
+  display: flex; gap: 10px;
+}
+.theme-card-btn {
+  flex: 1; padding: 10px 16px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; text-align: center;
+  transition: all .2s; cursor: pointer; border: none;
+}
+.theme-card-btn.primary {
+  background: rgba(255,255,255,0.08); color: var(--portal-text);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.theme-card-btn.primary:hover {
+  background: rgba(255,255,255,0.12);
+}
+.theme-card-btn.secondary {
+  background: transparent; color: var(--portal-text-dim);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.theme-card-btn.secondary:hover {
+  color: var(--portal-text);
+  border-color: rgba(255,255,255,0.2);
+}
+
+/* ===================== Logo 展示区 ===================== */
+.logo-section {
+  padding: 80px 48px; max-width: 1400px; margin: 0 auto;
+}
+.logo-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+}
+.logo-card {
+  background: var(--portal-surface);
+  border: 1px solid var(--portal-border);
+  border-radius: 20px; padding: 40px;
+  display: flex; flex-direction: column; align-items: center;
+  transition: transform .3s, border-color .3s;
+}
+.logo-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.15);
+}
+.logo-card-preview {
+  width: 100%; height: 160px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px; position: relative; overflow: hidden;
+}
+.logo-card-preview.light-blue { background: linear-gradient(135deg, #e8f1ff, #f0f7ff); }
+.logo-card-preview.white { background: #ffffff; border: 1px solid #f0f0f0; }
+.logo-card-preview.scifi {
+  background: linear-gradient(135deg, #0a0e27, #0d1b3e);
+}
+.logo-card-preview.scifi::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.logo-card-preview svg { position: relative; z-index: 1; }
+.logo-card-name {
+  font-size: 16px; font-weight: 700; margin-bottom: 6px;
+}
+.logo-card-desc {
+  font-size: 13px; color: var(--portal-text-dim); text-align: center;
+}
+
+/* ===================== 导航模式展示 ===================== */
+.nav-patterns-section {
+  padding: 80px 48px; max-width: 1400px; margin: 0 auto;
+}
+.nav-patterns-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+}
+.nav-pattern-card {
+  background: var(--portal-surface);
+  border: 1px solid var(--portal-border);
+  border-radius: 16px; padding: 32px;
+  transition: transform .3s, border-color .3s;
+}
+.nav-pattern-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.15);
+}
+.nav-pattern-visual {
+  height: 120px; border-radius: 10px; margin-bottom: 20px;
+  position: relative; overflow: hidden;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.nav-pattern-title {
+  font-size: 16px; font-weight: 700; margin-bottom: 6px;
+}
+.nav-pattern-desc {
+  font-size: 13px; color: var(--portal-text-dim); line-height: 1.5;
+}
+
+/* 导航模式迷你预览 */
+.mini-preview {
+  position: absolute; inset: 16px;
+  display: flex; gap: 6px;
+}
+.mini-sidebar {
+  width: 40px; display: flex; flex-direction: column; gap: 4px;
+}
+.mini-sidebar .mini-block {
+  height: 12px; border-radius: 3px;
+  background: rgba(255,255,255,0.08);
+}
+.mini-sidebar .mini-block:first-child {
+  background: rgba(99,102,241,0.5);
+}
+.mini-sidebar .mini-block.active {
+  background: var(--portal-accent);
+}
+.mini-content {
+  flex: 1; display: flex; flex-direction: column; gap: 4px;
+}
+.mini-content .mini-top {
+  height: 14px; border-radius: 3px; background: rgba(255,255,255,0.06);
+}
+.mini-content .mini-body {
+  flex: 1; display: grid; grid-template-columns: repeat(3,1fr); gap: 4px;
+}
+.mini-content .mini-body .mini-block {
+  border-radius: 3px; background: rgba(255,255,255,0.04);
+}
+
+/* 顶部导航预览 */
+.nav-pattern-visual.top-nav .mini-preview {
+  flex-direction: column;
+}
+.nav-pattern-visual.top-nav .mini-top-nav {
+  height: 14px; border-radius: 3px; background: rgba(99,102,241,0.2);
+  display: flex; gap: 4px; padding: 3px; align-items: center;
+}
+.nav-pattern-visual.top-nav .mini-top-nav .mini-nav-item {
+  height: 8px; width: 20px; border-radius: 2px;
+  background: rgba(255,255,255,0.1);
+}
+.nav-pattern-visual.top-nav .mini-top-nav .mini-nav-item.active {
+  background: var(--portal-accent);
+}
+.nav-pattern-visual.top-nav .mini-content-full {
+  flex: 1; display: grid; grid-template-columns: repeat(3,1fr); gap: 4px;
+  margin-top: 4px;
+}
+.nav-pattern-visual.top-nav .mini-content-full .mini-block {
+  border-radius: 3px; background: rgba(255,255,255,0.04);
+}
+
+/* 混合导航预览 */
+.nav-pattern-visual.hybrid .mini-preview {
+  flex-direction: column;
+}
+.nav-pattern-visual.hybrid .mini-top-bar {
+  height: 14px; border-radius: 3px; background: rgba(99,102,241,0.2);
+  margin-bottom: 4px;
+}
+.nav-pattern-visual.hybrid .mini-bottom {
+  flex: 1; display: flex; gap: 4px;
+}
+.nav-pattern-visual.hybrid .mini-side {
+  width: 30px; display: flex; flex-direction: column; gap: 3px;
+}
+.nav-pattern-visual.hybrid .mini-side .mini-block {
+  height: 8px; border-radius: 2px; background: rgba(255,255,255,0.08);
+}
+.nav-pattern-visual.hybrid .mini-side .mini-block.active {
+  background: var(--portal-accent);
+}
+.nav-pattern-visual.hybrid .mini-main {
+  flex: 1; display: grid; grid-template-columns: repeat(2,1fr); gap: 4px;
+}
+.nav-pattern-visual.hybrid .mini-main .mini-block {
+  border-radius: 3px; background: rgba(255,255,255,0.04);
+}
+
+/* 折叠导航预览 */
+.nav-pattern-visual.collapsed .mini-sidebar {
+  width: 20px;
+}
+.nav-pattern-visual.collapsed .mini-sidebar .mini-block {
+  height: 8px;
+}
+
+/* ===================== 特性区 ===================== */
+.features-section {
+  padding: 80px 48px; max-width: 1400px; margin: 0 auto;
+}
+.features-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+}
+.feature-card {
+  background: var(--portal-surface);
+  border: 1px solid var(--portal-border);
+  border-radius: 14px; padding: 28px;
+  transition: transform .3s, border-color .3s;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.15);
+}
+.feature-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.2);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px; font-size: 20px;
+}
+.feature-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.feature-desc { font-size: 13px; color: var(--portal-text-dim); line-height: 1.5; }
+
+/* ===================== Footer ===================== */
+.footer {
+  padding: 48px; text-align: center;
+  border-top: 1px solid var(--portal-border);
+  margin-top: 80px;
+}
+.footer p { font-size: 13px; color: var(--portal-text-dim); }
+
+/* ===================== 动画 ===================== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  to { background-position: 200% center; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* 响应式 */
+@media (max-width: 1024px) {
+  .themes-grid, .logo-grid { grid-template-columns: repeat(2, 1fr); }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-patterns-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .themes-grid, .logo-grid, .features-grid { grid-template-columns: 1fr; }
+  .hero-stats { flex-direction: column; gap: 16px; }
+  .nav { padding: 16px 20px; }
+  .nav-links { display: none; }
+  .themes-section, .logo-section, .nav-patterns-section, .features-section { padding: 48px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="portal-bg"></div>
+
+<!-- 导航栏 -->
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-brand-mark">D</div>
+    <div class="nav-brand-text">DesignVerse<span>B端UI设计系统</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#themes">主题方案</a>
+    <a href="#logos">Logo设计</a>
+    <a href="#nav-patterns">导航模式</a>
+    <a href="#features">特性</a>
+  </div>
+  <a href="https://htmlpreview.github.io/?https://github.com/yangxin1994/link-up/blob/ui-design-system/dashboard.html" class="nav-cta">查看仪表盘</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    3套主题 · 4种导航 · 完整设计系统
+  </div>
+  <h1>
+    B端后台管理系统<br>
+    <span class="gradient">UI设计系统展示</span>
+  </h1>
+  <p>
+    精心打造的三套主题方案——浅蓝底色、白底纯净、科幻蓝，搭配四种导航菜单模式，
+    配套登录页面与Logo设计，覆盖企业级后台管理全场景。
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">3</div>
+      <div class="hero-stat-label">主题方案</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">4</div>
+      <div class="hero-stat-label">导航模式</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">3</div>
+      <div class="hero-stat-label">登录页面</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">3</div>
+      <div class="hero-stat-label">Logo设计</div>
+    </div>
+  </div>
+</section>
+
+<!-- 主题方案 -->
+<section class="themes-section" id="themes">
+  <div class="section-header">
+    <h2>三套主题方案</h2>
+    <p>每套主题拥有独立的色彩体系、组件风格和视觉语言</p>
+  </div>
+  <div class="themes-grid">
+
+    <!-- 浅蓝底色 -->
+    <div class="theme-card" onclick="window.location.href='https://htmlpreview.github.io/?https://github.com/yangxin1994/link-up/blob/ui-design-system/dashboard.html#theme=light-blue'">
+      <div class="theme-preview theme-preview-light-blue">
+        <div class="mock-sidebar">
+          <div class="mock-logo"></div>
+          <div class="mock-nav-item active"></div>
+          <div class="mock-nav-item"></div>
+          <div class="mock-nav-item"></div>
+          <div class="mock-nav-item"></div>
+        </div>
+        <div class="mock-content">
+          <div class="mock-topbar">
+            <div class="mock-search"></div>
+            <div class="mock-avatar"></div>
+          </div>
+          <div class="mock-cards">
+            <div class="mock-card"><div class="mock-num"></div><div class="mock-bar"></div></div>
+            <div class="mock-card"><div class="mock-num"></div><div class="mock-bar"></div></div>
+            <div class="mock-card"><div class="mock-num"></div><div class="mock-bar"></div></div>
+          </div>
+          <div class="mock-chart">
+            <div class="mock-bar-chart" style="height:40%"></div>
+            <div class="mock-bar-chart" style="height:65%"></div>
+            <div class="mock-bar-chart" style="height:50%"></div>
+            <div class="mock-bar-chart" style="height:80%"></div>
+            <div class="mock-bar-chart" style="height:60%"></div>
+            <div class="mock-bar-chart" style="height:90%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="theme-card-info">
+        <div class="theme-card-header">
+          <div class="theme-card-title">浅蓝底色</div>
+          <div class="theme-card-tag light-blue">Light Blue</div>
+        </div>
+        <p class="theme-card-desc">柔和浅蓝背景搭配白色卡片，清爽专业，适合企业日常办公场景。</p>
+        <div class="theme-card-palette">
+          <div class="swatch" style="background:#f0f7ff"></div>
+          <div class="swatch" style="background:#3b82f6"></div>
+          <div class="swatch" style="background:#06b6d4"></div>
+          <div class="swatch" style="background:#1e40af"></div>
+          <div class="swatch" style="background:#ffffff;border-color:#e0e0e0"></div>
+        </div>
+        <div class="theme-card-actions">
+          <a href="https://htmlpreview.github.io/?https://github.com/yangxin1994/link-up/blob/ui-design-system/dashboard.html#theme=light-blue" class="theme-card-btn primary">仪表盘</a>
+          <a href="https://htmlpreview.github.io/?https://github.com/yangxin1994/link-up/blob/ui-design-system/login.html#theme=light-blue" class="theme-card-btn secondary">登录页</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 白底纯净 -->
+    <div class="theme-card" onclick="window.location.href='https://htmlpreview.github.io/?https://github.com/yangxin1994/link-up/blob/ui-design-system/dashboard.html#theme=white'">
+      <div class="theme-preview theme-preview-white">
+        <div class="mock-sidebar">
+          <div class="mock-logo"></div>
+          <div class="mock-nav-item active"></div>
+          <div class="mock-nav-item"></div>
+          <div class="mock-nav-item"></div>
+          <div class="mock-nav-item"></div>
+        </div>
+        <div class="mock-content">
+          <div class="mock-topbar">
+            <div class="mock-search"></div>
+            <div class="mock-avatar"></div>
+          </div>
+          <div class="mock-cards">
+            <div class="mock-card"><div class="mock-num"></div><div class="mock-bar"></div></div>
+            <div class="mock-card"><div class="mock-num"></div><div class="mock-bar"></div></div>
+            <div class="mock-card"><div class="mock-num"></div><div class="mock-bar"></div></div>
+          </div>
+          <div class="mock-chart">
+            <div class="mock-bar-chart" style="height:40%"></div>
+            <div class="mock-bar-chart" style="height:65%"></div>
+            <div class="mock-bar-chart" style="height:50%"></div>
+            <div class="mock-bar-chart" style="height:80%"></div>
+            <div class="mock-bar-chart" style="height:60%"></div>
+            <div class="mock-bar-chart" style="height:90%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="theme-card-info">
+        <div class="theme-card-header">
+          <div class="theme-card-title">白底纯净</div>
+          <div class="theme-card-tag white">Pure White</div>
+        </div>
+        <p class="theme-card-desc">极简白底搭配靛蓝点缀，去除多余装饰，聚焦内容本身，高端克制。</p>
+        <div class="theme-card-palette">
+          <div class="swatch" style="background:#ffffff;border-color:#e0e0e0"></div>
+          <div class="swatch" style="background:#4f46e5"></div>
+          <div class="swatch" style="background:#7c3aed"></div>
+          <div class="swatch" style="background:#10b981"></div>
+          <div class="swatch" style="background:#1e1b4b"></div>
+        </div>
+        <div class="theme-card-actions">
+          <a href="https://htmlpreview.github.io/?https://github.com/yangxin1994/link-up/blob/ui-design-system/dashboard.html#theme=white" class="theme-card-btn primary">仪表盘</a>
+          <a href="https://htmlpreview.github.io/?https://github.com/yangxin1994/link-up/blob/ui-design-system/login.html#theme=white" class="theme-card-btn secondary">登录页</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 科幻蓝 -->
+    <div class="theme-card" onclick="window.location.href='https://htmlpreview.github.io/?https://github.com/yangxin1994/link-up/blob/ui-design-system/dashboard.html#theme=scifi'">
+      <div class="theme-preview theme-preview-scifi">
+        <div class="mock-sidebar">
+          <div class="mock-logo"></div>
+          <div class="mock-nav-item active"></div>
+          <div class="mock-nav-item"></div>
+          <div class="mock-nav-item"></div>
+          <div class="mock-nav-item"></div>
+        </div>
+        <div class="mock-content">
+          <div class="mock-topbar">
+            <div class="mock-search"></div>
+            <div class="mock-avatar"></div>
+          </div>
+          <div class="mock-cards">
+            <div class="mock-card"><div class="mock-num"></div><div class="mock-bar"></div></div>
+            <div class="mock-card"><div class="mock-num"></div><div class="mock-bar"></div></div>
+            <div class="mock-card"><div class="mock-num"></div><div class="mock-bar"></div></div>
+          </div>
+          <div class="mock-chart">
+            <div class="mock-bar-chart" style="height:40%"></div>
+            <div class="mock-bar-chart" style="height:65%"></div>
+            <div class="mock-bar-chart" style="height:50%"></div>
+            <div class="mock-bar-chart" style="height:80%"></div>
+            <div class="mock-bar-chart" style="height:60%"></div>
+            <div class="mock-bar-chart" style="height:90%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="theme-card-info">
+        <div class="theme-card-header">
+          <div class="theme-card-title">科幻蓝</div>
+          <div class="theme-card-tag scifi">Sci-Fi Blue</div>
+        </div>
+        <p class="theme-card-desc">深空蓝底色搭配霓虹辉光，毛玻璃质感与网格背景营造未来科技感。</p>
+        <div class="theme-card-palette">
+          <div class="swatch" style="background:#0a0e27"></div>
+          <div class="swatch" style="background:#00d4ff"></div>
+          <div class="swatch" style="background:#0066ff"></div>
+          <div class="swatch" style="background:#0d1b3e"></div>
+          <div class="swatch" style="background:#22d3ee"></div>
+        </div>
+        <div class="theme-card-actions">
+          <a href="https://htmlpreview.github.io/?https://github.com/yangxin1994/link-up/blob/ui-design-system/dashboard.html#theme=scifi" class="theme-card-btn primary">仪表盘</a>
+          <a href="https://htmlpreview.github.io/?https://github.com/yangxin1994/link-up/blob/ui-design-system/login.html#theme=scifi" class="theme-card-btn secondary">登录页</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Logo 设计 -->
+<section class="logo-section" id="logos">
+  <div class="section-header">
+    <h2>Logo 设计</h2>
+    <p>每套主题配套独立设计的品牌标识</p>
+  </div>
+  <div class="logo-grid">
+
+    <!-- Logo: 浅蓝 -->
+    <div class="logo-card">
+      <div class="logo-card-preview light-blue">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+          <defs>
+            <linearGradient id="logo-lb-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3b82f6"/>
+              <stop offset="100%" stop-color="#06b6d4"/>
+            </linearGradient>
+          </defs>
+          <!-- 六边形外框 -->
+          <path d="M60 10 L100 32 L100 78 L60 100 L20 78 L20 32 Z" fill="none" stroke="url(#logo-lb-grad)" stroke-width="3" opacity="0.3"/>
+          <!-- 内部六边形 -->
+          <path d="M60 25 L87 40 L87 70 L60 85 L33 70 L33 40 Z" fill="url(#logo-lb-grad)" opacity="0.15"/>
+          <!-- 数据节点连线 -->
+          <circle cx="60" cy="35" r="4" fill="#3b82f6"/>
+          <circle cx="80" cy="50" r="3" fill="#06b6d4"/>
+          <circle cx="80" cy="70" r="3" fill="#06b6d4"/>
+          <circle cx="60" cy="75" r="4" fill="#3b82f6"/>
+          <circle cx="40" cy="70" r="3" fill="#06b6d4"/>
+          <circle cx="40" cy="50" r="3" fill="#06b6d4"/>
+          <line x1="60" y1="35" x2="80" y2="50" stroke="#3b82f6" stroke-width="1.5" opacity="0.5"/>
+          <line x1="80" y1="50" x2="80" y2="70" stroke="#06b6d4" stroke-width="1.5" opacity="0.5"/>
+          <line x1="80" y1="70" x2="60" y2="75" stroke="#3b82f6" stroke-width="1.5" opacity="0.5"/>
+          <line x1="60" y1="75" x2="40" y2="70" stroke="#06b6d4" stroke-width="1.5" opacity="0.5"/>
+          <line x1="40" y1="70" x2="40" y2="50" stroke="#3b82f6" stroke-width="1.5" opacity="0.5"/>
+          <line x1="40" y1="50" x2="60" y2="35" stroke="#06b6d4" stroke-width="1.5" opacity="0.5"/>
+          <!-- 中心 -->
+          <circle cx="60" cy="55" r="8" fill="url(#logo-lb-grad)"/>
+          <text x="60" y="59" text-anchor="middle" fill="white" font-size="10" font-weight="800" font-family="Manrope">D</text>
+        </svg>
+      </div>
+      <div class="logo-card-name">DataNode</div>
+      <p class="logo-card-desc">六边形数据节点网络，蓝色渐变体现连接与智能</p>
+    </div>
+
+    <!-- Logo: 白底 -->
+    <div class="logo-card">
+      <div class="logo-card-preview white">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+          <defs>
+            <linearGradient id="logo-wh-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#4f46e5"/>
+              <stop offset="100%" stop-color="#7c3aed"/>
+            </linearGradient>
+          </defs>
+          <!-- 几何叠加 -->
+          <rect x="30" y="30" width="50" height="50" rx="12" fill="url(#logo-wh-grad)" opacity="0.1" transform="rotate(15 55 55)"/>
+          <rect x="35" y="35" width="50" height="50" rx="12" fill="url(#logo-wh-grad)" opacity="0.2" transform="rotate(-10 60 60)"/>
+          <rect x="40" y="40" width="40" height="40" rx="10" fill="url(#logo-wh-grad)"/>
+          <!-- 内部图形 -->
+          <path d="M52 55 L60 47 L68 55 L68 68 L52 68 Z" fill="white" opacity="0.9"/>
+          <circle cx="60" cy="52" r="3" fill="url(#logo-wh-grad)"/>
+          <!-- 文字 -->
+          <text x="60" y="100" text-anchor="middle" fill="#4f46e5" font-size="12" font-weight="700" font-family="Manrope">PURITY</text>
+        </svg>
+      </div>
+      <div class="logo-card-name">Purity</div>
+      <p class="logo-card-desc">几何方块叠加，靛蓝渐变传达精确与纯粹</p>
+    </div>
+
+    <!-- Logo: 科幻蓝 -->
+    <div class="logo-card">
+      <div class="logo-card-preview scifi">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+          <defs>
+            <linearGradient id="logo-sf-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#00d4ff"/>
+              <stop offset="100%" stop-color="#0066ff"/>
+            </linearGradient>
+            <filter id="logo-sf-glow">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- 外层电路环 -->
+          <circle cx="60" cy="55" r="38" fill="none" stroke="#00d4ff" stroke-width="1" opacity="0.2" stroke-dasharray="4 4"/>
+          <circle cx="60" cy="55" r="30" fill="none" stroke="url(#logo-sf-grad)" stroke-width="2" opacity="0.4"/>
+          <!-- 六边形核心 -->
+          <path d="M60 30 L82 42 L82 68 L60 80 L38 68 L38 42 Z" fill="none" stroke="url(#logo-sf-grad)" stroke-width="2" filter="url(#logo-sf-glow)"/>
+          <path d="M60 38 L75 46 L75 64 L60 72 L45 64 L45 46 Z" fill="url(#logo-sf-grad)" opacity="0.2"/>
+          <!-- 中心点 -->
+          <circle cx="60" cy="55" r="6" fill="url(#logo-sf-grad)" filter="url(#logo-sf-glow)"/>
+          <!-- 电路节点 -->
+          <circle cx="60" cy="17" r="2.5" fill="#00d4ff" filter="url(#logo-sf-glow)"/>
+          <circle cx="98" cy="55" r="2.5" fill="#00d4ff" filter="url(#logo-sf-glow)"/>
+          <circle cx="60" cy="93" r="2.5" fill="#00d4ff" filter="url(#logo-sf-glow)"/>
+          <circle cx="22" cy="55" r="2.5" fill="#00d4ff" filter="url(#logo-sf-glow)"/>
+          <line x1="60" y1="17" x2="60" y2="30" stroke="#00d4ff" stroke-width="1" opacity="0.4"/>
+          <line x1="98" y1="55" x2="82" y2="55" stroke="#00d4ff" stroke-width="1" opacity="0.4"/>
+          <line x1="60" y1="93" x2="60" y2="80" stroke="#00d4ff" stroke-width="1" opacity="0.4"/>
+          <line x1="22" y1="55" x2="38" y2="55" stroke="#00d4ff" stroke-width="1" opacity="0.4"/>
+          <!-- 文字 -->
+          <text x="60" y="108" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="700" font-family="JetBrains Mono" letter-spacing="2">NEXUS</text>
+        </svg>
+      </div>
+      <div class="logo-card-name">Nexus</div>
+      <p class="logo-card-desc">六边形核心搭配电路节点，霓虹辉光呈现科技未来感</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- 导航模式 -->
+<section class="nav-patterns-section" id="nav-patterns">
+  <div class="section-header">
+    <h2>四种导航菜单模式</h2>
+    <p>灵活适配不同业务场景的信息架构需求</p>
+  </div>
+  <div class="nav-patterns-grid">
+
+    <div class="nav-pattern-card">
+      <div class="nav-pattern-visual">
+        <div class="mini-preview">
+          <div class="mini-sidebar">
+            <div class="mini-block"></div>
+            <div class="mini-block active"></div>
+            <div class="mini-block"></div>
+            <div class="mini-block"></div>
+            <div class="mini-block"></div>
+          </div>
+          <div class="mini-content">
+            <div class="mini-top"></div>
+            <div class="mini-body">
+              <div class="mini-block"></div>
+              <div class="mini-block"></div>
+              <div class="mini-block"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-pattern-title">左侧侧边栏导航</div>
+      <p class="nav-pattern-desc">最经典的B端导航模式，左侧固定垂直菜单，支持多级展开，适合功能模块较多的系统。</p>
+    </div>
+
+    <div class="nav-pattern-card">
+      <div class="nav-pattern-visual top-nav">
+        <div class="mini-preview">
+          <div class="mini-top-nav">
+            <div class="mini-nav-item active"></div>
+            <div class="mini-nav-item"></div>
+            <div class="mini-nav-item"></div>
+            <div class="mini-nav-item"></div>
+          </div>
+          <div class="mini-content-full">
+            <div class="mini-block"></div>
+            <div class="mini-block"></div>
+            <div class="mini-block"></div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-pattern-title">顶部水平导航</div>
+      <p class="nav-pattern-desc">顶部水平排列菜单项，最大化内容区域宽度，适合功能模块较少、侧重数据展示的系统。</p>
+    </div>
+
+    <div class="nav-pattern-card">
+      <div class="nav-pattern-visual hybrid">
+        <div class="mini-preview">
+          <div class="mini-top-bar"></div>
+          <div class="mini-bottom">
+            <div class="mini-side">
+              <div class="mini-block active"></div>
+              <div class="mini-block"></div>
+              <div class="mini-block"></div>
+            </div>
+            <div class="mini-main">
+              <div class="mini-block"></div>
+              <div class="mini-block"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-pattern-title">混合导航</div>
+      <p class="nav-pattern-desc">顶部主导航+左侧子导航的组合模式，信息分层清晰，适合大型复杂业务系统。</p>
+    </div>
+
+    <div class="nav-pattern-card">
+      <div class="nav-pattern-visual collapsed">
+        <div class="mini-preview">
+          <div class="mini-sidebar">
+            <div class="mini-block active"></div>
+            <div class="mini-block"></div>
+            <div class="mini-block"></div>
+            <div class="mini-block"></div>
+            <div class="mini-block"></div>
+          </div>
+          <div class="mini-content">
+            <div class="mini-top"></div>
+            <div class="mini-body">
+              <div class="mini-block"></div>
+              <div class="mini-block"></div>
+              <div class="mini-block"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-pattern-title">折叠图标导航</div>
+      <p class="nav-pattern-desc">侧边栏收缩为图标模式，悬停展开，最大化内容空间，适合需要大面积数据展示的场景。</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- 特性 -->
+<section class="features-section" id="features">
+  <div class="section-header">
+    <h2>设计系统特性</h2>
+    <p>完整的组件体系与设计规范</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <div class="feature-title">主题切换</div>
+      <p class="feature-desc">CSS变量驱动，一键切换三套主题，色彩、字体、阴影全部联动。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧭</div>
+      <div class="feature-title">导航灵活</div>
+      <p class="feature-desc">四种导航模式可随时切换，适应不同信息架构和屏幕尺寸。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📐</div>
+      <div class="feature-title">组件丰富</div>
+      <p class="feature-desc">统计卡片、数据图表、表格列表、表单等B端核心组件全覆盖。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-title">即用即走</div>
+      <p class="feature-desc">纯HTML/CSS/JS实现，无需构建工具，直接打开即可使用。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>B端后台管理系统 UI 设计系统 · 浅蓝底色 / 白底纯净 / 科幻蓝 · 3套主题 × 4种导航 × 3个登录页</p>
+</footer>
+
+<script>
+// 平滑滚动到锚点
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// 主题卡片入场动画
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, index) => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '0';
+      entry.target.style.transform = 'translateY(30px)';
+      requestAnimationFrame(() => {
+        entry.target.style.transition = 'opacity .6s ease, transform .6s ease';
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      });
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.theme-card, .logo-card, .nav-pattern-card, .feature-card').forEach(el => {
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>
