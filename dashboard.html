@@ -1471,16 +1471,22 @@ td.mono { font-family: var(--font-mono); }
 </div>
 
 <!-- 返回门户 -->
-<a href="index.html" class="back-to-portal">
+<a href="https://htmlpreview.github.io/?https://github.com/yangxin1994/link-up/blob/ui-design-system/index.html" class="back-to-portal">
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
   返回门户
 </a>
 
 <script>
-// 获取URL参数
+// 获取URL参数（同时支持 query string 和 hash）
 function getUrlParam(name) {
   const params = new URLSearchParams(window.location.search);
-  return params.get(name);
+  if (params.get(name)) return params.get(name);
+  // 从 hash 中读取
+  if (window.location.hash) {
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    return hashParams.get(name);
+  }
+  return null;
 }
 
 // 主题配置
@@ -1515,10 +1521,8 @@ document.querySelectorAll('[data-theme-btn]').forEach(btn => {
     document.querySelectorAll('[data-theme-btn]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     updateLogo();
-    // 更新URL
-    const url = new URL(window.location);
-    url.searchParams.set('theme', currentTheme);
-    window.history.replaceState({}, '', url);
+    // 更新URL（用 hash 传递主题参数）
+    window.history.replaceState({}, '', window.location.pathname + window.location.search + '#theme=' + currentTheme);
   });
 });
 
